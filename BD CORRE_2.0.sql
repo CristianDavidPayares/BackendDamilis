@@ -197,7 +197,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`T_CATEGORIA`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`T_CATEGORIA` (
-  `CAT_ID` VARCHAR(45) NOT NULL,
+  `CAT_ID` INT NOT NULL AUTO_INCREMENT,
   `CAT_UUID` VARCHAR(45) NOT NULL,
   `CAT_TIPO_CATEGORIA` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`CAT_ID`),
