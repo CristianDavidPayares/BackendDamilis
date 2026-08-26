@@ -44,16 +44,20 @@ def cntUpdateCategoria():
     return jsonify({"mensaje": "Categoría actualizada correctamente"}), 200
 
 
-def cntDeleteCategoria():
-    body = request.get_json()
-    id = body.get("id")
+def cntDeleteCategoria(id):
 
     if not id:
-        return jsonify({"error": "id es obligatorio"}), 400
+        return jsonify({
+            "error": "id es obligatorio"
+        }), 400
 
     filas_afectadas = delCategoria(id)
 
     if filas_afectadas == 0:
-        return jsonify({"error": "Categoría no encontrada"}), 404
+        return jsonify({
+            "error": "Categoría no encontrada"
+        }), 404
 
-    return jsonify({"mensaje": "Categoría eliminada correctamente"}), 200
+    return jsonify({
+        "mensaje": "Categoría eliminada correctamente"
+    }), 200

@@ -24,9 +24,9 @@ def updateCategoria():
     return cntUpdateCategoria()
 
 
-@cat_bp.route('/', methods=['DELETE'])
-def deleteCategoria():
-    return cntDeleteCategoria()
+@cat_bp.route('/<int:id>', methods=['DELETE'])
+def deleteCategoria(id):
+    return cntDeleteCategoria(id)
 
 
 # http://128.9.9.9/categorias/

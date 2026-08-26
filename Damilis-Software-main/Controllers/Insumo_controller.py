@@ -25,9 +25,11 @@ def cntCreateInsumo():
     if not codigo or not tipo_insumo:
         return jsonify({"error": "codigo y tipo_insumo son obligatorios"}), 400
 
+    if searchByCodigo(codigo) is not None:
+        return jsonify({"error": "Ya existe un insumo con ese código"}), 409
+
     nuevo_insumo = addInsumo(codigo, tipo_insumo, unidad_medida, color)
     return jsonify(nuevo_insumo), 201
-
 
 def cntUpdateInsumo():
     body = request.get_json()
@@ -38,8 +40,8 @@ def cntUpdateInsumo():
     unidad_medida   = body.get("unidad_medida")
     color           = body.get("color")
 
-    if not id:
-        return jsonify({"error": "id es obligatorio"}), 400
+    if not id or not codigo or not tipo_insumo:
+        return jsonify({"error": "id, codigo y tipo_insumo son obligatorios"}), 400
 
     filas_afectadas = upInsumo(id, codigo, tipo_insumo, unidad_medida, color)
 
@@ -71,6 +73,7 @@ def cntSearchByCodigo(codigo):
         return jsonify({"error": "Insumo no encontrado"}), 404
 
     return jsonify(insumo), 200
+
 
 
 def cntListInsumosByTipo(tipo_insumo):
