@@ -19,11 +19,13 @@ def servListProducto():
 
 def addProducto(codigo, talla, color, resena, descripcion, precio, calificacion, imagen, cantidad):
     pro_uuid = str(uuid.uuid4())
+
     sql = """
         INSERT INTO T_PRODUCTO
-        (PRO_UUID, PRO_CODIGO, PRO_TALLA, PRO_COLOR, PRO_RESENA, PRO_DESCRIPCION, PRO_PRECIO, PRO_CALIFICACION, PRO_IMAGEN, PRO_CANTIDAD)
+        (PRO_UUID, PRO_CODIGO, PRO_TALLA, PRO_COLOR, RESENA, PRO_DESCRIPCION, PRO_PRECIO, PRO_CALIFICACION, PRO_IMAGEN, PRO_CANTIDAD)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
+
     valores = (pro_uuid, codigo, talla, color, resena, descripcion, precio, calificacion, imagen, cantidad)
 
     c = current_app.mysql.connection.cursor()
@@ -32,7 +34,10 @@ def addProducto(codigo, talla, color, resena, descripcion, precio, calificacion,
     new_id = c.lastrowid
     c.close()
 
-    return Producto(new_id, pro_uuid, codigo, talla, color, resena, descripcion, precio, calificacion, imagen, cantidad).to_dic()
+    return Producto(
+        new_id, pro_uuid, codigo, talla, color, resena,
+        descripcion, precio, calificacion, imagen, cantidad
+    ).to_dic()
 
 
 def upProducto(id, codigo, talla, color, resena, descripcion, precio, calificacion, imagen, cantidad):
