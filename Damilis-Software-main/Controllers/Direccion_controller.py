@@ -8,56 +8,87 @@ from Services.Direccion_services import (
 )
 
 
-def cntListDirecciones():
-    data = servListDireccion()
-    return jsonify(data), 200
+class DireccionController:
 
+    # Listar todas las direcciones
+    def ListDirecciones():
+        data = servListDireccion()
+        return jsonify(data), 200
 
-def cntCreateDireccion():
-    body = request.get_json()
+    # Crear una dirección
+    def create():
+        body = request.get_json(silent=True)
 
-    user_id     = body.get("user_id")
-    direccion   = body.get("direccion")
+        if not body:
+            return jsonify({
+                "error": "El cuerpo de la petición es obligatorio"
+            }), 400
 
-    if not user_id or not direccion:
-        return jsonify({"error": "user_id y direccion son obligatorios"}), 400
+        user_id = body.get("user_id")
+        direccion = body.get("direccion")
 
-    nueva_direccion = addDireccion(user_id, direccion)
-    return jsonify(nueva_direccion), 201
+        if not user_id or not direccion:
+            return jsonify({
+                "error": "user_id y direccion son obligatorios"
+            }), 400
 
+        nueva_direccion = addDireccion(
+            user_id,
+            direccion
+        )
 
-def cntUpdateDireccion():
-    body = request.get_json()
+        return jsonify(nueva_direccion), 201
 
-    id          = body.get("id")
-    direccion   = body.get("direccion")
+    # Actualizar una dirección
+    def update():
+        body = request.get_json(silent=True)
 
-    if not id or not direccion:
-        return jsonify({"error": "id y direccion son obligatorios"}), 400
+        if not body:
+            return jsonify({
+                "error": "El cuerpo de la petición es obligatorio"
+            }), 400
 
-    filas_afectadas = upDireccion(id, direccion)
+        id = body.get("id")
+        direccion = body.get("direccion")
 
-    if filas_afectadas == 0:
-        return jsonify({"error": "Dirección no encontrada"}), 404
+        if not id or not direccion:
+            return jsonify({
+                "error": "id y direccion son obligatorios"
+            }), 400
 
-    return jsonify({"mensaje": "Dirección actualizada correctamente"}), 200
+        filas_afectadas = upDireccion(
+            id,
+            direccion
+        )
 
+        if filas_afectadas == 0:
+            return jsonify({
+                "error": "Dirección no encontrada"
+            }), 404
 
-def cntDeleteDireccion():
-    body = request.get_json()
-    id = body.get("id")
+        return jsonify({
+            "mensaje": "Dirección actualizada correctamente"
+        }), 200
 
-    if not id:
-        return jsonify({"error": "id es obligatorio"}), 400
+    # Eliminar una dirección
+    def delete(id):
+        if not id:
+            return jsonify({
+                "error": "id es obligatorio"
+            }), 400
 
-    filas_afectadas = delDireccion(id)
+        filas_afectadas = delDireccion(id)
 
-    if filas_afectadas == 0:
-        return jsonify({"error": "Dirección no encontrada"}), 404
+        if filas_afectadas == 0:
+            return jsonify({
+                "error": "Dirección no encontrada"
+            }), 404
 
-    return jsonify({"mensaje": "Dirección eliminada correctamente"}), 200
+        return jsonify({
+            "mensaje": "Dirección eliminada correctamente"
+        }), 200
 
-
-def cntListDireccionesByUser(user_id):
-    data = servListDireccionByUser(user_id)
-    return jsonify(data), 200
+    # Listar direcciones por usuario
+    def ListDireccionesByUser(user_id):
+        data = servListDireccionByUser(user_id)
+        return jsonify(data), 200

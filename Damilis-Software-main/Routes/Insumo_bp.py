@@ -1,45 +1,44 @@
 from flask import Blueprint
-from Controllers.Insumo_controller import (
-    cntListInsumos,
-    cntCreateInsumo,
-    cntUpdateInsumo,
-    cntDeleteInsumo,
-    cntSearchByCodigo,
-    cntListInsumosByTipo
-)
+from Controllers.Insumo_controller import InsumoController
+
 
 ins_bp = Blueprint('insumo_bp', __name__)
 
 
+# Listar todos los insumos
 @ins_bp.route('/', methods=['GET'])
 def listInsumos():
-    return cntListInsumos()
+    return InsumoController.ListInsumos()
 
 
+# Crear un insumo
 @ins_bp.route('/', methods=['POST'])
 def createInsumo():
-    return cntCreateInsumo()
+    return InsumoController.create()
 
 
+# Actualizar un insumo
 @ins_bp.route('/', methods=['PUT'])
 def updateInsumo():
-    return cntUpdateInsumo()
+    return InsumoController.update()
 
 
-@ins_bp.route('/', methods=['DELETE'])
-def deleteInsumo():
-    return cntDeleteInsumo()
+# Eliminar un insumo
+@ins_bp.route('/<int:id>', methods=['DELETE'])
+def deleteInsumo(id):
+    return InsumoController.delete(id)
 
 
-@ins_bp.route('/search/<codigo>', methods=['GET'])
+# Buscar insumo por código
+@ins_bp.route('/codigo/<codigo>', methods=['GET'])
 def searchInsumoByCodigo(codigo):
-    return cntSearchByCodigo(codigo)
+    return InsumoController.SearchByCodigo(codigo)
 
 
+# Listar insumos por tipo
 @ins_bp.route('/tipo/<tipo_insumo>', methods=['GET'])
 def listInsumosByTipo(tipo_insumo):
-    return cntListInsumosByTipo(tipo_insumo)
-
+    return InsumoController.ListInsumosByTipo(tipo_insumo)
 
 # http://128.9.9.9/insumos/
 # http://128.9.9.9/insumos/            (POST -> crear)

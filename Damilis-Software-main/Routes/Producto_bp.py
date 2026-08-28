@@ -1,44 +1,44 @@
 from flask import Blueprint
-from Controllers.Producto_controller import (
-    cntListProductos,
-    cntCreateProducto,
-    cntUpdateProducto,
-    cntDeleteProducto,
-    cntSearchByCodigo,
-    cntUpdateCantidad
-)
-
-pro_bp = Blueprint('producto_bp', __name__)
+from Controllers.Producto_controller import ProductoController
 
 
-@pro_bp.route('/', methods=['GET'])
+prod_bp = Blueprint('producto_bp', __name__)
+
+
+# Listar todos los productos
+@prod_bp.route('/', methods=['GET'])
 def listProductos():
-    return cntListProductos()
+    return ProductoController.ListProductos()
 
 
-@pro_bp.route('/', methods=['POST'])
+# Crear un producto
+@prod_bp.route('/', methods=['POST'])
 def createProducto():
-    return cntCreateProducto()
+    return ProductoController.create()
 
 
-@pro_bp.route('/', methods=['PUT'])
+# Actualizar un producto
+@prod_bp.route('/', methods=['PUT'])
 def updateProducto():
-    return cntUpdateProducto()
+    return ProductoController.update()
 
 
-@pro_bp.route('/', methods=['DELETE'])
-def deleteProducto():
-    return cntDeleteProducto()
+# Eliminar un producto
+@prod_bp.route('/<int:id>', methods=['DELETE'])
+def deleteProducto(id):
+    return ProductoController.delete(id)
 
 
-@pro_bp.route('/search/<codigo>', methods=['GET'])
+# Buscar producto por código
+@prod_bp.route('/codigo/<codigo>', methods=['GET'])
 def searchProductoByCodigo(codigo):
-    return cntSearchByCodigo(codigo)
+    return ProductoController.SearchByCodigo(codigo)
 
 
-@pro_bp.route('/cantidad', methods=['PUT'])
-def updateCantidadProducto():
-    return cntUpdateCantidad()
+# Actualizar cantidad de un producto
+@prod_bp.route('/cantidad', methods=['PUT'])
+def updateCantidad():
+    return ProductoController.UpdateCantidad()
 
 
 # http://128.9.9.9/productos/

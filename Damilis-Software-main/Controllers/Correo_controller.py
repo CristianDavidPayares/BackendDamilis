@@ -9,59 +9,103 @@ from Services.Correo_services import (
 )
 
 
-def cntListCorreos():
-    data = servListCorreo()
-    return jsonify(data), 200
+class CorreoController:
 
+    # Listar todos los correos
+    def ListCorreos():
+        data = servListCorreo()
+        return jsonify(data), 200
 
-def cntCreateCorreo():
-    body = request.get_json()
+    # Crear un correo
+    def create():
+        body = request.get_json(silent=True)
 
-    user_id = body.get("user_id")
-    correo  = body.get("correo")
+        if not body:
+            return jsonify({
+                "error": "El cuerpo de la petición es obligatorio"
+            }), 400
 
-    if not user_id or not correo:
-        return jsonify({"error": "user_id y correo son obligatorios"}), 400
+        user_id = body.get("user_id")
+        correo = body.get("correo")
 
-    if searchByCorreo(correo) is not None:
-        return jsonify({"error": "El correo ya está registrado"}), 409
+        if not user_id or not correo:
+            return jsonify({
+                "error": "user_id y correo son obligatorios"
+            }), 400
 
-    nuevo_correo = addCorreo(user_id, correo)
-    return jsonify(nuevo_correo), 201
+        if searchByCorreo(correo) is not None:
+            return jsonify({
+                "error": "El correo ya está registrado"
+            }), 409
 
+        nuevo_correo = addCorreo(
+            user_id,
+            correo
+        )
 
-def cntUpdateCorreo():
-    body = request.get_json()
+        return jsonify(nuevo_correo), 201
 
-    id      = body.get("id")
-    correo  = body.get("correo")
+    # Actualizar un correo
+    def update():
+        body = request.get_json(silent=True)
 
-    if not id or not correo:
-        return jsonify({"error": "id y correo son obligatorios"}), 400
+        if not body:
+            return jsonify({
+                "error": "El cuerpo de la petición es obligatorio"
+            }), 400
 
-    filas_afectadas = upCorreo(id, correo)
+        id = body.get("id")
+        correo = body.get("correo")
 
-    if filas_afectadas == 0:
-        return jsonify({"error": "Correo no encontrado"}), 404
+        if not id or not correo:
+            return jsonify({
+                "error": "id y correo son obligatorios"
+            }), 400
 
-    return jsonify({"mensaje": "Correo actualizado correctamente"}), 200
+        filas_afectadas = upCorreo(
+            id,
+            correo
+        )
 
+        if filas_afectadas == 0:
+            return jsonify({
+                "error": "Correo no encontrado"
+            }), 404
 
-def cntDeleteCorreo():
-    body = request.get_json()
-    id = body.get("id")
+        return jsonify({
+            "mensaje": "Correo actualizado correctamente"
+        }), 200
 
-    if not id:
-        return jsonify({"error": "id es obligatorio"}), 400
+    # Eliminar un correo
+    def delete(id):
+        if not id:
+            return jsonify({
+                "error": "id es obligatorio"
+            }), 400
 
-    filas_afectadas = delCorreo(id)
+        filas_afectadas = delCorreo(id)
 
-    if filas_afectadas == 0:
-        return jsonify({"error": "Correo no encontrado"}), 404
+        if filas_afectadas == 0:
+            return jsonify({
+                "error": "Correo no encontrado"
+            }), 404
 
-    return jsonify({"mensaje": "Correo eliminado correctamente"}), 200
+        return jsonify({
+            "mensaje": "Correo eliminado correctamente"
+        }), 200
 
+    # Listar correos por usuario
+    def ListCorreosByUser(user_id):
+        data = servListCorreoByUser(user_id)
+        return jsonify(data), 200
 
-def cntListCorreosByUser(user_id):
-    data = servListCorreoByUser(user_id)
-    return jsonify(data), 200
+    # Buscar correo
+    def SearchByCorreo(correo):
+        resultado = searchByCorreo(correo)
+
+        if resultado is None:
+            return jsonify({
+                "error": "Correo no encontrado"
+            }), 404
+
+        return jsonify(resultado), 200

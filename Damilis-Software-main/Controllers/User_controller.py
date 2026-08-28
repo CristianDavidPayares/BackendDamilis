@@ -1,89 +1,150 @@
 from flask import jsonify, request
-from Services.User_services import servListUser, addUser, upUser, delUser, searchByDoc
+from Services.User_services import (
+    servListUser,
+    addUser,
+    upUser,
+    delUser,
+    searchByDoc
+)
 
 
-def cntListUsers():
-    data = servListUser()
-    return jsonify(data), 200
+class UserController:
 
+    # Listar todos los usuarios
+    def ListUsers():
+        data = servListUser()
+        return jsonify(data), 200
 
-def cntCreateUser():
-    body = request.get_json()
+    # Crear un usuario
+    def create():
+        body = request.get_json(silent=True)
 
-    cedula              = body.get("cedula")
-    primer_nombre       = body.get("primer_nombre")
-    segundo_nombre      = body.get("segundo_nombre")
-    primer_apellido     = body.get("primer_apellido")
-    segundo_apellido    = body.get("segundo_apellido")
+        if not body:
+            return jsonify({
+                "error": "El cuerpo de la petición es obligatorio"
+            }), 400
 
-    if not cedula or not primer_nombre or not primer_apellido:
-        return jsonify({"error": "cedula, primer_nombre y primer_apellido son obligatorios"}), 400
+        campos_requeridos = [
+            "cedula",
+            "primer_nombre",
+            "primer_apellido",
+            "segundo_apellido"
+        ]
 
-    nuevo_usuario = addUser(cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido)
-    return jsonify(nuevo_usuario), 201
+        campos_faltantes = [
+            campo for campo in campos_requeridos
+            if campo not in body
+        ]
 
+        if campos_faltantes:
+            return jsonify({
+                "error": "Campos faltantes",
+                "campos": campos_faltantes
+            }), 400
 
-def cntUpdateUser():
-    body = request.get_json()
+        cedula = body.get("cedula")
+        primer_nombre = body.get("primer_nombre")
+        segundo_nombre = body.get("segundo_nombre")
+        primer_apellido = body.get("primer_apellido")
+        segundo_apellido = body.get("segundo_apellido")
 
-    id                  = body.get("id")
-    cedula              = body.get("cedula")
-    primer_nombre       = body.get("primer_nombre")
-    segundo_nombre      = body.get("segundo_nombre")
-    primer_apellido     = body.get("primer_apellido")
-    segundo_apellido    = body.get("segundo_apellido")
+        if not cedula or not primer_nombre or not primer_apellido:
+            return jsonify({
+                "error": "cedula, primer_nombre y primer_apellido son obligatorios"
+            }), 400
 
-    if not id:
-        return jsonify({"error": "id es obligatorio"}), 400
+        nuevo_usuario = addUser(
+            cedula,
+            primer_nombre,
+            segundo_nombre,
+            primer_apellido,
+            segundo_apellido
+        )
 
-    filas_afectadas = upUser(id, cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido)
+        return jsonify(nuevo_usuario), 201
 
-    if filas_afectadas == 0:
-        return jsonify({"error": "Usuario no encontrado"}), 404
+    # Actualizar un usuario
+    def update():
+        body = request.get_json(silent=True)
 
-    return jsonify({"mensaje": "Usuario actualizado correctamente"}), 200
+        if not body:
+            return jsonify({
+                "error": "El cuerpo de la petición es obligatorio"
+            }), 400
 
+        campos_requeridos = [
+            "id",
+            "cedula",
+            "primer_nombre",
+            "primer_apellido"
+        ]
 
-# def cntDeleteUser():
-#     body = request.get_json()
-#     id = body.get("id")
+        campos_faltantes = [
+            campo for campo in campos_requeridos
+            if campo not in body
+        ]
 
-#     if not id:
-#         return jsonify({"error": "id es obligatorio"}), 400
+        if campos_faltantes:
+            return jsonify({
+                "error": "Campos faltantes",
+                "campos": campos_faltantes
+            }), 400
 
-#     filas_afectadas = delUser(id)
+        id = body.get("id")
+        cedula = body.get("cedula")
+        primer_nombre = body.get("primer_nombre")
+        segundo_nombre = body.get("segundo_nombre")
+        primer_apellido = body.get("primer_apellido")
+        segundo_apellido = body.get("segundo_apellido")
 
-#     if filas_afectadas == 0:
-#         return jsonify({"error": "Usuario no encontrado"}), 404
+        if not id:
+            return jsonify({
+                "error": "id es obligatorio"
+            }), 400
 
-#     return jsonify({"mensaje": "Usuario eliminado correctamente"}), 200
+        filas_afectadas = upUser(
+            id,
+            cedula,
+            primer_nombre,
+            segundo_nombre,
+            primer_apellido,
+            segundo_apellido
+        )
 
-def cntDeleteUser(id):
+        if filas_afectadas == 0:
+            return jsonify({
+                "error": "Usuario no encontrado"
+            }), 404
 
-    if not id:
         return jsonify({
-            "error": "id es obligatorio"
-        }), 400
+            "mensaje": "Usuario actualizado correctamente"
+        }), 200
 
-    filas_afectadas = delUser(id)
+    # Eliminar un usuario
+    def delete(id):
+        if not id:
+            return jsonify({
+                "error": "id es obligatorio"
+            }), 400
 
-    if filas_afectadas == 0:
+        filas_afectadas = delUser(id)
+
+        if filas_afectadas == 0:
+            return jsonify({
+                "error": "Usuario no encontrado"
+            }), 404
+
         return jsonify({
-            "error": "Usuario no encontrado"
-        }), 404
+            "mensaje": "Usuario eliminado correctamente"
+        }), 200
 
-    return jsonify({
-        "mensaje": "Usuario eliminado correctamente"
-    }), 200
+    # Buscar usuario por cédula
+    def SearchByDoc(cedula):
+        usuario = searchByDoc(cedula)
 
+        if usuario is None:
+            return jsonify({
+                "error": "Usuario no encontrado"
+            }), 404
 
-def cntSearchByDoc(cedula):
-
-    usuario = searchByDoc(cedula)
-
-    if usuario is None:
-        return jsonify({
-            "error": "Usuario no encontrado"
-        }), 404
-
-    return jsonify(usuario), 200
+        return jsonify(usuario), 200

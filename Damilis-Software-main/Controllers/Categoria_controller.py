@@ -8,56 +8,94 @@ from Services.Categoria_services import (
 )
 
 
-def cntListCategorias():
-    data = servListCategoria()
-    return jsonify(data), 200
+class CategoriaController:
 
+    # Listar todas las categorías
+    def ListCategorias():
+        data = servListCategoria()
+        return jsonify(data), 200
 
-def cntCreateCategoria():
-    body = request.get_json()
-    tipo_categoria = body.get("tipo_categoria")
+    # Crear una categoría
+    def create():
+        body = request.get_json(silent=True)
 
-    if not tipo_categoria:
-        return jsonify({"error": "tipo_categoria es obligatorio"}), 400
+        if not body:
+            return jsonify({
+                "error": "El cuerpo de la petición es obligatorio"
+            }), 400
 
-    if searchByTipo(tipo_categoria) is not None:
-        return jsonify({"error": "Ya existe una categoría con ese tipo"}), 409
+        tipo_categoria = body.get("tipo_categoria")
 
-    nueva_categoria = addCategoria(tipo_categoria)
-    return jsonify(nueva_categoria), 201
+        if not tipo_categoria:
+            return jsonify({
+                "error": "tipo_categoria es obligatorio"
+            }), 400
 
+        if searchByTipo(tipo_categoria) is not None:
+            return jsonify({
+                "error": "Ya existe una categoría con ese tipo"
+            }), 409
 
-def cntUpdateCategoria():
-    body = request.get_json()
+        nueva_categoria = addCategoria(tipo_categoria)
 
-    id              = body.get("id")
-    tipo_categoria  = body.get("tipo_categoria")
+        return jsonify(nueva_categoria), 201
 
-    if not id or not tipo_categoria:
-        return jsonify({"error": "id y tipo_categoria son obligatorios"}), 400
+    # Actualizar una categoría
+    def update():
+        body = request.get_json(silent=True)
 
-    filas_afectadas = upCategoria(id, tipo_categoria)
+        if not body:
+            return jsonify({
+                "error": "El cuerpo de la petición es obligatorio"
+            }), 400
 
-    if filas_afectadas == 0:
-        return jsonify({"error": "Categoría no encontrada"}), 404
+        id = body.get("id")
+        tipo_categoria = body.get("tipo_categoria")
 
-    return jsonify({"mensaje": "Categoría actualizada correctamente"}), 200
+        if not id or not tipo_categoria:
+            return jsonify({
+                "error": "id y tipo_categoria son obligatorios"
+            }), 400
 
+        filas_afectadas = upCategoria(
+            id,
+            tipo_categoria
+        )
 
-def cntDeleteCategoria(id):
+        if filas_afectadas == 0:
+            return jsonify({
+                "error": "Categoría no encontrada"
+            }), 404
 
-    if not id:
         return jsonify({
-            "error": "id es obligatorio"
-        }), 400
+            "mensaje": "Categoría actualizada correctamente"
+        }), 200
+    
+    # Buscar una categoría por tipo
+    def SearchByTipo(tipo_categoria):
+        categoria = searchByTipo(tipo_categoria)
 
-    filas_afectadas = delCategoria(id)
+        if categoria is None:
+            return jsonify({
+                "error": "Categoría no encontrada"
+            }), 404
 
-    if filas_afectadas == 0:
+        return jsonify(categoria), 200
+
+    # Eliminar una categoría
+    def delete(id):
+        if not id:
+            return jsonify({
+                "error": "id es obligatorio"
+            }), 400
+
+        filas_afectadas = delCategoria(id)
+
+        if filas_afectadas == 0:
+            return jsonify({
+                "error": "Categoría no encontrada"
+            }), 404
+
         return jsonify({
-            "error": "Categoría no encontrada"
-        }), 404
-
-    return jsonify({
-        "mensaje": "Categoría eliminada correctamente"
-    }), 200
+            "mensaje": "Categoría eliminada correctamente"
+        }), 200

@@ -1,38 +1,38 @@
 from flask import Blueprint
-from Controllers.Direccion_controller import (
-    cntListDirecciones,
-    cntCreateDireccion,
-    cntUpdateDireccion,
-    cntDeleteDireccion,
-    cntListDireccionesByUser
-)
+from Controllers.Direccion_controller import DireccionController
+
 
 dir_bp = Blueprint('direccion_bp', __name__)
 
 
+# Listar todas las direcciones
 @dir_bp.route('/', methods=['GET'])
 def listDirecciones():
-    return cntListDirecciones()
+    return DireccionController.ListDirecciones()
 
 
+# Crear una dirección
 @dir_bp.route('/', methods=['POST'])
 def createDireccion():
-    return cntCreateDireccion()
+    return DireccionController.create()
 
 
+# Actualizar una dirección
 @dir_bp.route('/', methods=['PUT'])
 def updateDireccion():
-    return cntUpdateDireccion()
+    return DireccionController.update()
 
 
-@dir_bp.route('/', methods=['DELETE'])
-def deleteDireccion():
-    return cntDeleteDireccion()
+# Eliminar una dirección
+@dir_bp.route('/<int:id>', methods=['DELETE'])
+def deleteDireccion(id):
+    return DireccionController.delete(id)
 
 
+# Listar direcciones por usuario
 @dir_bp.route('/user/<user_id>', methods=['GET'])
 def listDireccionesByUser(user_id):
-    return cntListDireccionesByUser(user_id)
+    return DireccionController.ListDireccionesByUser(user_id)
 
 
 # http://128.9.9.9/direcciones/

@@ -10,90 +10,142 @@ from Services.Cliente_services import (
 )
 
 
-def cntListClientes():
-    data = servListCliente()
-    return jsonify(data), 200
+class ClienteController:
 
+    # Listar todos los clientes
+    def ListClientes():
+        data = servListCliente()
+        return jsonify(data), 200
 
-def cntCreateCliente():
-    body = request.get_json()
+    # Crear un cliente
+    def create():
+        body = request.get_json(silent=True)
 
-    preferencias    = body.get("preferencias")
-    per_cedula      = body.get("per_cedula")
-    user_id         = body.get("user_id")
+        if not body:
+            return jsonify({
+                "error": "El cuerpo de la petición es obligatorio"
+            }), 400
 
-    if not per_cedula or not user_id:
-        return jsonify({"error": "per_cedula y user_id son obligatorios"}), 400
+        preferencias = body.get("preferencias")
+        per_cedula = body.get("per_cedula")
+        user_id = body.get("user_id")
 
-    if searchByCedula(per_cedula) is not None:
-        return jsonify({"error": "Ya existe un cliente con esa cédula"}), 409
+        if not per_cedula or not user_id:
+            return jsonify({
+                "error": "per_cedula y user_id son obligatorios"
+            }), 400
 
-    nuevo_cliente = addCliente(preferencias, per_cedula, user_id)
-    return jsonify(nuevo_cliente), 201
+        if searchByCedula(per_cedula) is not None:
+            return jsonify({
+                "error": "Ya existe un cliente con esa cédula"
+            }), 409
 
+        nuevo_cliente = addCliente(
+            preferencias,
+            per_cedula,
+            user_id
+        )
 
-def cntUpdateCliente():
-    body = request.get_json()
+        return jsonify(nuevo_cliente), 201
 
-    id              = body.get("id")
-    preferencias    = body.get("preferencias")
+    # Actualizar un cliente
+    def update():
+        body = request.get_json(silent=True)
 
-    if not id:
-        return jsonify({"error": "id es obligatorio"}), 400
+        if not body:
+            return jsonify({
+                "error": "El cuerpo de la petición es obligatorio"
+            }), 400
 
-    filas_afectadas = upCliente(id, preferencias)
+        id = body.get("id")
+        preferencias = body.get("preferencias")
 
-    if filas_afectadas == 0:
-        return jsonify({"error": "Cliente no encontrado"}), 404
+        if not id:
+            return jsonify({
+                "error": "id es obligatorio"
+            }), 400
 
-    return jsonify({"mensaje": "Cliente actualizado correctamente"}), 200
+        filas_afectadas = upCliente(
+            id,
+            preferencias
+        )
 
+        if filas_afectadas == 0:
+            return jsonify({
+                "error": "Cliente no encontrado"
+            }), 404
 
-def cntDeleteCliente():
-    body = request.get_json()
-    id = body.get("id")
+        return jsonify({
+            "mensaje": "Cliente actualizado correctamente"
+        }), 200
 
-    if not id:
-        return jsonify({"error": "id es obligatorio"}), 400
+    # Eliminar un cliente
+    def delete(id):
+        if not id:
+            return jsonify({
+                "error": "id es obligatorio"
+            }), 400
 
-    filas_afectadas = delCliente(id)
+        filas_afectadas = delCliente(id)
 
-    if filas_afectadas == 0:
-        return jsonify({"error": "Cliente no encontrado"}), 404
+        if filas_afectadas == 0:
+            return jsonify({
+                "error": "Cliente no encontrado"
+            }), 404
 
-    return jsonify({"mensaje": "Cliente eliminado correctamente"}), 200
+        return jsonify({
+            "mensaje": "Cliente eliminado correctamente"
+        }), 200
 
+    # Cambiar estado de un cliente
+    def CambiarEstado():
+        body = request.get_json(silent=True)
 
-def cntCambiarEstado():
-    body = request.get_json()
+        if not body:
+            return jsonify({
+                "error": "El cuerpo de la petición es obligatorio"
+            }), 400
 
-    id      = body.get("id")
-    estado  = body.get("estado")
+        id = body.get("id")
+        estado = body.get("estado")
 
-    if not id or not estado:
-        return jsonify({"error": "id y estado son obligatorios"}), 400
+        if not id or not estado:
+            return jsonify({
+                "error": "id y estado son obligatorios"
+            }), 400
 
-    filas_afectadas = cambiarEstado(id, estado)
+        filas_afectadas = cambiarEstado(
+            id,
+            estado
+        )
 
-    if filas_afectadas == 0:
-        return jsonify({"error": "Cliente no encontrado"}), 404
+        if filas_afectadas == 0:
+            return jsonify({
+                "error": "Cliente no encontrado"
+            }), 404
 
-    return jsonify({"mensaje": "Estado actualizado correctamente"}), 200
+        return jsonify({
+            "mensaje": "Estado actualizado correctamente"
+        }), 200
 
+    # Buscar cliente por cédula
+    def SearchByCedula(per_cedula):
+        cliente = searchByCedula(per_cedula)
 
-def cntSearchByCedula(per_cedula):
-    cliente = searchByCedula(per_cedula)
+        if cliente is None:
+            return jsonify({
+                "error": "Cliente no encontrado"
+            }), 404
 
-    if cliente is None:
-        return jsonify({"error": "Cliente no encontrado"}), 404
+        return jsonify(cliente), 200
 
-    return jsonify(cliente), 200
+    # Buscar cliente por ID de usuario
+    def SearchByUserId(user_id):
+        cliente = searchByUserId(user_id)
 
+        if cliente is None:
+            return jsonify({
+                "error": "Cliente no encontrado"
+            }), 404
 
-def cntSearchByUserId(user_id):
-    cliente = searchByUserId(user_id)
-
-    if cliente is None:
-        return jsonify({"error": "Cliente no encontrado"}), 404
-
-    return jsonify(cliente), 200
+        return jsonify(cliente), 200

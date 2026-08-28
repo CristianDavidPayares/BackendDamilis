@@ -1,41 +1,38 @@
 from flask import Blueprint
-from Controllers.User_controller import (
-    cntListUsers,
-    cntCreateUser,
-    cntUpdateUser,
-    cntDeleteUser,
-    cntSearchByDoc
-)
+from Controllers.User_controller import UserController
+
 
 us_bp = Blueprint('user_bp', __name__)
 
 
-
-
+# Listar usuarios
 @us_bp.route('/', methods=['GET'])
 def listUsers():
-    return cntListUsers()
+    return UserController.ListUsers()
 
 
+# Crear usuario
 @us_bp.route('/', methods=['POST'])
 def createUser():
-    return cntCreateUser()
+    return UserController.create()
 
 
+# Actualizar usuario
 @us_bp.route('/', methods=['PUT'])
 def updateUser():
-    return cntUpdateUser()
+    return UserController.update()
 
 
-@us_bp.route("/<int:id>", methods=["DELETE"])
+# Eliminar usuario
+@us_bp.route('/<int:id>', methods=['DELETE'])
 def deleteUser(id):
-    return cntDeleteUser(id)
+    return UserController.delete(id)
 
 
+# Buscar usuario por cédula
 @us_bp.route('/search/<cedula>', methods=['GET'])
 def searchUserByDoc(cedula):
-    return cntSearchByDoc(cedula)
-
+    return UserController.SearchByDoc(cedula)
 
 # http://128.9.9.9/users/
 # http://128.9.9.9/users/          (POST -> crear)

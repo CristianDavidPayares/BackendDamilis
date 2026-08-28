@@ -11,7 +11,8 @@ from Routes.Correo_bp import cor_bp
 from Routes.Direccion_bp import dir_bp
 from Routes.Insumo_bp import ins_bp
 from Routes.Pqr_bp import pqr_bp
-
+from Routes.Telefono_bp import tel_bp
+from Routes.Producto_bp import prod_bp
 
 app = Flask(__name__)
 
@@ -30,7 +31,8 @@ app.register_blueprint(cor_bp, url_prefix='/correos')
 app.register_blueprint(dir_bp, url_prefix='/direcciones')
 app.register_blueprint(ins_bp, url_prefix='/insumos')
 app.register_blueprint(pqr_bp, url_prefix='/pqrs')
-
+app.register_blueprint(tel_bp, url_prefix='/telefonos')
+app.register_blueprint(prod_bp, url_prefix='/productos')
 
 if __name__ == '__main__':
     app.run(debug=True)
