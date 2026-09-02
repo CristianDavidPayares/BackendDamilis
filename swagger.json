@@ -1,0 +1,1517 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Proyecto formativo",
+    "description": "API REST para gestión de usuarios, administradores, clientes, categorías, compras, correos, direcciones, insumos, PQRs, productos y teléfonos.",
+    "version": "3.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:5000",
+      "description": "Api"
+    }
+  ],
+  "tags": [
+    { "name": "Usuarios", "description": "Gestión de usuarios" },
+    { "name": "Administradores", "description": "Gestión de administradores" },
+    { "name": "Clientes", "description": "Gestión de clientes" },
+    { "name": "Categorías", "description": "Gestión de categorías" },
+    { "name": "Compras", "description": "Gestión de compras" },
+    { "name": "Correos", "description": "Gestión de correos electrónicos" },
+    { "name": "Direcciones", "description": "Gestión de direcciones" },
+    { "name": "Insumos", "description": "Gestión de insumos" },
+    { "name": "PQRs", "description": "Gestión de peticiones, quejas y reclamos" },
+    { "name": "Productos", "description": "Gestión de productos" },
+    { "name": "Teléfonos", "description": "Gestión de teléfonos" }
+  ],
+  "components": {
+    "schemas": {
+      "Usuario": {
+        "type": "object",
+        "properties": {
+          "user_id": { "type": "integer", "example": 1 },
+          "user_cedula": { "type": "string", "example": "12345678" },
+          "user_uuid": { "type": "string", "example": "550e8400-e29b-41d4-a716-446655440000" },
+          "user_primer_nombre": { "type": "string", "example": "Juan" },
+          "user_segundo_nombre": { "type": "string", "example": "Carlos" },
+          "user_primer_apellido": { "type": "string", "example": "Pérez" },
+          "user_segundo_apellido": { "type": "string", "example": "Gómez" }
+        }
+      },
+      "Administrador": {
+        "type": "object",
+        "properties": {
+          "adm_id": { "type": "integer", "example": 1 },
+          "adm_uuid": { "type": "string", "example": "550e8400-e29b-41d4-a716-446655440001" },
+          "adm_usuario": { "type": "string", "example": "admin01" },
+          "adm_contrasena": { "type": "string", "example": "hashed_password" }
+        }
+      },
+      "Cliente": {
+        "type": "object",
+        "properties": {
+          "cli_id": { "type": "integer", "example": 1 },
+          "cli_uuid": { "type": "string", "example": "550e8400-e29b-41d4-a716-446655440002" },
+          "cli_nombre": { "type": "string", "example": "María" },
+          "cli_apellido": { "type": "string", "example": "López" },
+          "cli_email": { "type": "string", "example": "maria@ejemplo.com" },
+          "cli_telefono": { "type": "string", "example": "3123456789" },
+          "cli_direccion": { "type": "string", "example": "Calle 123" }
+        }
+      },
+      "Categoria": {
+        "type": "object",
+        "properties": {
+          "cat_id": { "type": "integer", "example": 1 },
+          "cat_uuid": { "type": "string", "example": "550e8400-e29b-41d4-a716-446655440003" },
+          "cat_nombre": { "type": "string", "example": "Electrónicos" },
+          "cat_descripcion": { "type": "string", "example": "Productos electrónicos" }
+        }
+      },
+      "Compra": {
+        "type": "object",
+        "properties": {
+          "comp_id": { "type": "integer", "example": 5 },
+          "comp_uuid": { "type": "string", "example": "550e8400-e29b-41d4-a716-446655440004" },
+          "comp_fecha_compra": { "type": "string", "format": "date-time", "example": "2026-09-01T12:00:00" },
+          "comp_subtotal": { "type": "number", "example": 150.75 },
+          "comp_metodo_pago": { "type": "string", "example": "efectivo" },
+          "comp_numero_compras": { "type": "integer", "example": 1 },
+          "comp_cli_id": { "type": "integer", "example": 3 }
+        }
+      },
+      "Correo": {
+        "type": "object",
+        "properties": {
+          "cor_id": { "type": "integer", "example": 8 },
+          "cor_uuid": { "type": "string", "example": "550e8400-e29b-41d4-a716-446655440005" },
+          "cor_user_id": { "type": "integer", "example": 2 },
+          "cor_correo": { "type": "string", "example": "juan@ejemplo.com" }
+        }
+      },
+      "Direccion": {
+        "type": "object",
+        "properties": {
+          "dir_id": { "type": "integer", "example": 4 },
+          "dir_uuid": { "type": "string", "example": "550e8400-e29b-41d4-a716-446655440006" },
+          "dir_user_id": { "type": "integer", "example": 2 },
+          "dir_direccion": { "type": "string", "example": "Calle 123 #45-67" }
+        }
+      },
+      "Insumo": {
+        "type": "object",
+        "properties": {
+          "ins_id": { "type": "integer", "example": 3 },
+          "ins_uuid": { "type": "string", "example": "550e8400-e29b-41d4-a716-446655440007" },
+          "ins_codigo": { "type": "string", "example": "INS001" },
+          "ins_tipo_insumo": { "type": "string", "example": "Tela" },
+          "ins_unidad_medida": { "type": "string", "example": "metros" },
+          "ins_color": { "type": "string", "example": "Rojo" }
+        }
+      },
+      "Pqr": {
+        "type": "object",
+        "properties": {
+          "pqr_id": { "type": "integer", "example": 10 },
+          "pqr_uuid": { "type": "string", "example": "550e8400-e29b-41d4-a716-446655440008" },
+          "pqr_descripcion": { "type": "string", "example": "Producto defectuoso" },
+          "pqr_estado": { "type": "string", "example": "PENDIENTE" },
+          "pqr_fecha_respuesta": { "type": "string", "format": "date-time", "example": null },
+          "pqr_fecha": { "type": "string", "format": "date-time", "example": "2026-09-01T12:00:00" },
+          "pqr_cli_id": { "type": "integer", "example": 7 }
+        }
+      },
+      "Producto": {
+        "type": "object",
+        "properties": {
+          "pro_id": { "type": "integer", "example": 1 },
+          "pro_uuid": { "type": "string", "example": "550e8400-e29b-41d4-a716-446655440009" },
+          "pro_codigo": { "type": "string", "example": "PROD001" },
+          "pro_talla": { "type": "string", "example": "M" },
+          "pro_color": { "type": "string", "example": "Azul" },
+          "pro_resena": { "type": "string", "example": "Excelente calidad" },
+          "pro_descripcion": { "type": "string", "example": "Camisa de algodón" },
+          "pro_precio": { "type": "number", "example": 25.99 },
+          "pro_calificacion": { "type": "number", "example": 4.5 },
+          "pro_imagen": { "type": "string", "example": "camisa.jpg" },
+          "pro_cantidad": { "type": "integer", "example": 10 }
+        }
+      },
+      "Telefono": {
+        "type": "object",
+        "properties": {
+          "tel_id": { "type": "integer", "example": 6 },
+          "tel_uuid": { "type": "string", "example": "550e8400-e29b-41d4-a716-446655440010" },
+          "tel_user_id": { "type": "integer", "example": 2 },
+          "tel_telefono": { "type": "string", "example": "3123456789" }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/users/": {
+      "get": {
+        "tags": ["Usuarios"],
+        "summary": "Listar todos los usuarios",
+        "responses": {
+          "200": {
+            "description": "Lista de usuarios",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Usuario" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Usuarios"],
+        "summary": "Crear un usuario",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["cedula", "primer_nombre", "primer_apellido"],
+                "properties": {
+                  "cedula": { "type": "integer", "example": 12345678 },
+                  "primer_nombre": { "type": "string", "example": "Juan" },
+                  "segundo_nombre": { "type": "string", "example": "Carlos" },
+                  "primer_apellido": { "type": "string", "example": "Pérez" },
+                  "segundo_apellido": { "type": "string", "example": "Gómez" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuario creado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Usuario" }
+              }
+            }
+          },
+          "400": { "description": "Error de validación" },
+          "409": { "description": "Cédula duplicada" }
+        }
+      },
+      "put": {
+        "tags": ["Usuarios"],
+        "summary": "Actualizar un usuario (se requiere id en el body)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id"],
+                "properties": {
+                  "id": { "type": "integer", "example": 1 },
+                  "cedula": { "type": "integer", "example": 12345678 },
+                  "primer_nombre": { "type": "string", "example": "Juan" },
+                  "segundo_nombre": { "type": "string", "example": "Carlos" },
+                  "primer_apellido": { "type": "string", "example": "Pérez" },
+                  "segundo_apellido": { "type": "string", "example": "Gómez" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Usuario actualizado" },
+          "400": { "description": "Error de validación" },
+          "404": { "description": "Usuario no encontrado" }
+        }
+      }
+    },
+    "/users/{id}": {
+      "delete": {
+        "tags": ["Usuarios"],
+        "summary": "Eliminar un usuario por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Usuario eliminado" },
+          "400": { "description": "ID inválido" },
+          "404": { "description": "Usuario no encontrado" }
+        }
+      }
+    },
+    "/users/search/{cedula}": {
+      "get": {
+        "tags": ["Usuarios"],
+        "summary": "Buscar usuario por cédula",
+        "parameters": [
+          {
+            "name": "cedula",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Usuario" }
+              }
+            }
+          },
+          "404": { "description": "Usuario no encontrado" }
+        }
+      }
+    },
+    "/admins/": {
+      "get": {
+        "tags": ["Administradores"],
+        "summary": "Listar todos los administradores",
+        "responses": {
+          "200": {
+            "description": "Lista de administradores",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Administrador" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Administradores"],
+        "summary": "Crear un administrador",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["adm_usuario", "adm_contrasena"],
+                "properties": {
+                  "adm_usuario": { "type": "string", "example": "admin01" },
+                  "adm_contrasena": { "type": "string", "example": "password123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Administrador creado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Administrador" }
+              }
+            }
+          },
+          "400": { "description": "Error de validación" }
+        }
+      },
+      "put": {
+        "tags": ["Administradores"],
+        "summary": "Actualizar un administrador (se requiere id en el body)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id"],
+                "properties": {
+                  "id": { "type": "integer", "example": 1 },
+                  "adm_usuario": { "type": "string", "example": "admin02" },
+                  "adm_contrasena": { "type": "string", "example": "newpassword" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Administrador actualizado" },
+          "404": { "description": "Administrador no encontrado" }
+        }
+      }
+    },
+    "/admins/{id}": {
+      "delete": {
+        "tags": ["Administradores"],
+        "summary": "Eliminar un administrador por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Administrador eliminado" },
+          "404": { "description": "Administrador no encontrado" }
+        }
+      }
+    },
+    "/clientes/": {
+      "get": {
+        "tags": ["Clientes"],
+        "summary": "Listar todos los clientes",
+        "responses": {
+          "200": {
+            "description": "Lista de clientes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Cliente" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Clientes"],
+        "summary": "Crear un cliente",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["cli_nombre", "cli_apellido", "cli_email"],
+                "properties": {
+                  "cli_nombre": { "type": "string", "example": "María" },
+                  "cli_apellido": { "type": "string", "example": "López" },
+                  "cli_email": { "type": "string", "example": "maria@ejemplo.com" },
+                  "cli_telefono": { "type": "string", "example": "3123456789" },
+                  "cli_direccion": { "type": "string", "example": "Calle 123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Cliente creado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Cliente" }
+              }
+            }
+          },
+          "400": { "description": "Error de validación" }
+        }
+      },
+      "put": {
+        "tags": ["Clientes"],
+        "summary": "Actualizar un cliente (se requiere id en el body)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id"],
+                "properties": {
+                  "id": { "type": "integer", "example": 1 },
+                  "cli_nombre": { "type": "string", "example": "María" },
+                  "cli_apellido": { "type": "string", "example": "López" },
+                  "cli_email": { "type": "string", "example": "maria@ejemplo.com" },
+                  "cli_telefono": { "type": "string", "example": "3123456789" },
+                  "cli_direccion": { "type": "string", "example": "Calle 123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Cliente actualizado" },
+          "404": { "description": "Cliente no encontrado" }
+        }
+      }
+    },
+    "/clientes/{id}": {
+      "delete": {
+        "tags": ["Clientes"],
+        "summary": "Eliminar un cliente por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Cliente eliminado" },
+          "404": { "description": "Cliente no encontrado" }
+        }
+      }
+    },
+    "/categorias/": {
+      "get": {
+        "tags": ["Categorías"],
+        "summary": "Listar todas las categorías",
+        "responses": {
+          "200": {
+            "description": "Lista de categorías",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Categoria" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Categorías"],
+        "summary": "Crear una categoría",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["cat_nombre"],
+                "properties": {
+                  "cat_nombre": { "type": "string", "example": "Electrónicos" },
+                  "cat_descripcion": { "type": "string", "example": "Productos electrónicos" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Categoría creada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Categoria" }
+              }
+            }
+          },
+          "400": { "description": "Error de validación" }
+        }
+      },
+      "put": {
+        "tags": ["Categorías"],
+        "summary": "Actualizar una categoría (se requiere id en el body)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id"],
+                "properties": {
+                  "id": { "type": "integer", "example": 1 },
+                  "cat_nombre": { "type": "string", "example": "Electrónica" },
+                  "cat_descripcion": { "type": "string", "example": "Productos electrónicos" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Categoría actualizada" },
+          "404": { "description": "Categoría no encontrada" }
+        }
+      }
+    },
+    "/categorias/{id}": {
+      "delete": {
+        "tags": ["Categorías"],
+        "summary": "Eliminar una categoría por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Categoría eliminada" },
+          "404": { "description": "Categoría no encontrada" }
+        }
+      }
+    },
+    "/compras/": {
+      "get": {
+        "tags": ["Compras"],
+        "summary": "Listar todas las compras",
+        "responses": {
+          "200": {
+            "description": "Lista de compras",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Compra" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Compras"],
+        "summary": "Crear una compra",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["subtotal", "metodo_pago", "cli_id"],
+                "properties": {
+                  "subtotal": { "type": "number", "example": 150.75 },
+                  "metodo_pago": { "type": "string", "example": "efectivo" },
+                  "numero_compras": { "type": "integer", "example": 1 },
+                  "cli_id": { "type": "integer", "example": 3 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Compra creada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Compra" }
+              }
+            }
+          },
+          "400": { "description": "Error de validación" }
+        }
+      },
+      "put": {
+        "tags": ["Compras"],
+        "summary": "Actualizar una compra (se requiere id en el body)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id", "subtotal", "metodo_pago", "numero_compras"],
+                "properties": {
+                  "id": { "type": "integer", "example": 5 },
+                  "subtotal": { "type": "number", "example": 200.00 },
+                  "metodo_pago": { "type": "string", "example": "tarjeta" },
+                  "numero_compras": { "type": "integer", "example": 2 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Compra actualizada" },
+          "400": { "description": "Error de validación" },
+          "404": { "description": "Compra no encontrada" }
+        }
+      }
+    },
+    "/compras/{id}": {
+      "delete": {
+        "tags": ["Compras"],
+        "summary": "Eliminar una compra por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Compra eliminada" },
+          "400": { "description": "ID inválido" },
+          "404": { "description": "Compra no encontrada" }
+        }
+      }
+    },
+    "/compras/cliente/{cli_id}": {
+      "get": {
+        "tags": ["Compras"],
+        "summary": "Listar compras de un cliente",
+        "parameters": [
+          {
+            "name": "cli_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de compras del cliente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Compra" }
+                }
+              }
+            }
+          },
+          "400": { "description": "ID inválido" }
+        }
+      }
+    },
+    "/correos/": {
+      "get": {
+        "tags": ["Correos"],
+        "summary": "Listar todos los correos",
+        "responses": {
+          "200": {
+            "description": "Lista de correos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Correo" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Correos"],
+        "summary": "Crear un correo",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["user_id", "correo"],
+                "properties": {
+                  "user_id": { "type": "integer", "example": 2 },
+                  "correo": { "type": "string", "example": "juan@ejemplo.com" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Correo creado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Correo" }
+              }
+            }
+          },
+          "400": { "description": "Error de validación" },
+          "409": { "description": "El correo ya está registrado" }
+        }
+      },
+      "put": {
+        "tags": ["Correos"],
+        "summary": "Actualizar un correo",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id", "correo"],
+                "properties": {
+                  "id": { "type": "integer", "example": 8 },
+                  "correo": { "type": "string", "example": "nuevo@ejemplo.com" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Correo actualizado" },
+          "400": { "description": "Error de validación" },
+          "404": { "description": "Correo no encontrado" }
+        }
+      }
+    },
+    "/correos/{id}": {
+      "delete": {
+        "tags": ["Correos"],
+        "summary": "Eliminar un correo por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Correo eliminado" },
+          "400": { "description": "ID inválido" },
+          "404": { "description": "Correo no encontrado" }
+        }
+      }
+    },
+    "/correos/user/{user_id}": {
+      "get": {
+        "tags": ["Correos"],
+        "summary": "Listar correos de un usuario",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de correos del usuario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Correo" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/correos/buscar/{correo}": {
+      "get": {
+        "tags": ["Correos"],
+        "summary": "Buscar un correo por dirección",
+        "parameters": [
+          {
+            "name": "correo",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Correo encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Correo" }
+              }
+            }
+          },
+          "404": { "description": "Correo no encontrado" }
+        }
+      }
+    },
+    "/direcciones/": {
+      "get": {
+        "tags": ["Direcciones"],
+        "summary": "Listar todas las direcciones",
+        "responses": {
+          "200": {
+            "description": "Lista de direcciones",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Direccion" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Direcciones"],
+        "summary": "Crear una dirección",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["user_id", "direccion"],
+                "properties": {
+                  "user_id": { "type": "integer", "example": 2 },
+                  "direccion": { "type": "string", "example": "Calle 123 #45-67" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Dirección creada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Direccion" }
+              }
+            }
+          },
+          "400": { "description": "Error de validación" }
+        }
+      },
+      "put": {
+        "tags": ["Direcciones"],
+        "summary": "Actualizar una dirección",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id", "direccion"],
+                "properties": {
+                  "id": { "type": "integer", "example": 4 },
+                  "direccion": { "type": "string", "example": "Carrera 8 #12-34" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Dirección actualizada" },
+          "400": { "description": "Error de validación" },
+          "404": { "description": "Dirección no encontrada" }
+        }
+      }
+    },
+    "/direcciones/{id}": {
+      "delete": {
+        "tags": ["Direcciones"],
+        "summary": "Eliminar una dirección por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Dirección eliminada" },
+          "400": { "description": "ID inválido" },
+          "404": { "description": "Dirección no encontrada" }
+        }
+      }
+    },
+    "/direcciones/user/{user_id}": {
+      "get": {
+        "tags": ["Direcciones"],
+        "summary": "Listar direcciones de un usuario",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de direcciones del usuario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Direccion" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/insumos/": {
+      "get": {
+        "tags": ["Insumos"],
+        "summary": "Listar todos los insumos",
+        "responses": {
+          "200": {
+            "description": "Lista de insumos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Insumo" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Insumos"],
+        "summary": "Crear un insumo",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["codigo", "tipo_insumo", "unidad_medida", "color"],
+                "properties": {
+                  "codigo": { "type": "string", "example": "INS001" },
+                  "tipo_insumo": { "type": "string", "example": "Tela" },
+                  "unidad_medida": { "type": "string", "example": "metros" },
+                  "color": { "type": "string", "example": "Rojo" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Insumo creado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Insumo" }
+              }
+            }
+          },
+          "400": { "description": "Error de validación" }
+        }
+      },
+      "put": {
+        "tags": ["Insumos"],
+        "summary": "Actualizar un insumo",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id", "codigo", "tipo_insumo", "unidad_medida", "color"],
+                "properties": {
+                  "id": { "type": "integer", "example": 3 },
+                  "codigo": { "type": "string", "example": "INS002" },
+                  "tipo_insumo": { "type": "string", "example": "Hilo" },
+                  "unidad_medida": { "type": "string", "example": "metros" },
+                  "color": { "type": "string", "example": "Negro" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Insumo actualizado" },
+          "400": { "description": "Error de validación" },
+          "404": { "description": "Insumo no encontrado" }
+        }
+      }
+    },
+    "/insumos/{id}": {
+      "delete": {
+        "tags": ["Insumos"],
+        "summary": "Eliminar un insumo por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Insumo eliminado" },
+          "400": { "description": "ID inválido" },
+          "404": { "description": "Insumo no encontrado" }
+        }
+      }
+    },
+    "/insumos/codigo/{codigo}": {
+      "get": {
+        "tags": ["Insumos"],
+        "summary": "Buscar insumo por código",
+        "parameters": [
+          {
+            "name": "codigo",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Insumo encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Insumo" }
+              }
+            }
+          },
+          "404": { "description": "Insumo no encontrado" }
+        }
+      }
+    },
+    "/insumos/tipo/{tipo_insumo}": {
+      "get": {
+        "tags": ["Insumos"],
+        "summary": "Listar insumos por tipo",
+        "parameters": [
+          {
+            "name": "tipo_insumo",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de insumos del tipo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Insumo" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pqrs/": {
+      "get": {
+        "tags": ["PQRs"],
+        "summary": "Listar todas las PQRs",
+        "responses": {
+          "200": {
+            "description": "Lista de PQRs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Pqr" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["PQRs"],
+        "summary": "Crear una PQR",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["descripcion", "cli_id"],
+                "properties": {
+                  "descripcion": { "type": "string", "example": "Producto defectuoso" },
+                  "cli_id": { "type": "integer", "example": 7 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "PQR creada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Pqr" }
+              }
+            }
+          },
+          "400": { "description": "Error de validación" }
+        }
+      },
+      "put": {
+        "tags": ["PQRs"],
+        "summary": "Actualizar una PQR (solo descripción)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id", "descripcion"],
+                "properties": {
+                  "id": { "type": "integer", "example": 10 },
+                  "descripcion": { "type": "string", "example": "Nueva descripción" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "PQR actualizada" },
+          "400": { "description": "Error de validación" },
+          "404": { "description": "PQR no encontrada" }
+        }
+      }
+    },
+    "/pqrs/{id}": {
+      "delete": {
+        "tags": ["PQRs"],
+        "summary": "Eliminar una PQR por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "PQR eliminada" },
+          "400": { "description": "ID inválido" },
+          "404": { "description": "PQR no encontrada" }
+        }
+      }
+    },
+    "/pqrs/cliente/{cli_id}": {
+      "get": {
+        "tags": ["PQRs"],
+        "summary": "Listar PQRs de un cliente",
+        "parameters": [
+          {
+            "name": "cli_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de PQRs del cliente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Pqr" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pqrs/responder": {
+      "put": {
+        "tags": ["PQRs"],
+        "summary": "Responder una PQR (cambiar estado)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id", "estado"],
+                "properties": {
+                  "id": { "type": "integer", "example": 10 },
+                  "estado": { "type": "string", "example": "RESUELTA" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "PQR respondida" },
+          "400": { "description": "Error de validación" },
+          "404": { "description": "PQR no encontrada" }
+        }
+      }
+    },
+    "/productos/": {
+      "get": {
+        "tags": ["Productos"],
+        "summary": "Listar todos los productos",
+        "responses": {
+          "200": {
+            "description": "Lista de productos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Producto" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Productos"],
+        "summary": "Crear un producto",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["codigo", "precio", "cantidad"],
+                "properties": {
+                  "codigo": { "type": "string", "example": "PROD001" },
+                  "talla": { "type": "string", "example": "M" },
+                  "color": { "type": "string", "example": "Azul" },
+                  "resena": { "type": "string", "example": "Excelente calidad" },
+                  "descripcion": { "type": "string", "example": "Camisa de algodón" },
+                  "precio": { "type": "number", "example": 25.99 },
+                  "calificacion": { "type": "number", "example": 4.5 },
+                  "imagen": { "type": "string", "example": "camisa.jpg" },
+                  "cantidad": { "type": "integer", "example": 10 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Producto creado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Producto" }
+              }
+            }
+          },
+          "400": { "description": "Error de validación" },
+          "409": { "description": "Código duplicado" }
+        }
+      },
+      "put": {
+        "tags": ["Productos"],
+        "summary": "Actualizar un producto",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id"],
+                "properties": {
+                  "id": { "type": "integer", "example": 1 },
+                  "codigo": { "type": "string", "example": "PROD002" },
+                  "talla": { "type": "string", "example": "L" },
+                  "color": { "type": "string", "example": "Negro" },
+                  "resena": { "type": "string", "example": "Buena calidad" },
+                  "descripcion": { "type": "string", "example": "Camisa de lino" },
+                  "precio": { "type": "number", "example": 30.00 },
+                  "calificacion": { "type": "number", "example": 4.0 },
+                  "imagen": { "type": "string", "example": "camisa2.jpg" },
+                  "cantidad": { "type": "integer", "example": 5 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Producto actualizado" },
+          "400": { "description": "Error de validación" },
+          "404": { "description": "Producto no encontrado" }
+        }
+      }
+    },
+    "/productos/{id}": {
+      "delete": {
+        "tags": ["Productos"],
+        "summary": "Eliminar un producto por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Producto eliminado" },
+          "400": { "description": "ID inválido" },
+          "404": { "description": "Producto no encontrado" }
+        }
+      }
+    },
+    "/productos/codigo/{codigo}": {
+      "get": {
+        "tags": ["Productos"],
+        "summary": "Buscar producto por código",
+        "parameters": [
+          {
+            "name": "codigo",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Producto encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Producto" }
+              }
+            }
+          },
+          "404": { "description": "Producto no encontrado" }
+        }
+      }
+    },
+    "/productos/cantidad": {
+      "put": {
+        "tags": ["Productos"],
+        "summary": "Actualizar solo la cantidad de un producto",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id", "cantidad"],
+                "properties": {
+                  "id": { "type": "integer", "example": 1 },
+                  "cantidad": { "type": "integer", "example": 8 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Cantidad actualizada" },
+          "400": { "description": "Error de validación" },
+          "404": { "description": "Producto no encontrado" }
+        }
+      }
+    },
+    "/telefonos/": {
+      "get": {
+        "tags": ["Teléfonos"],
+        "summary": "Listar todos los teléfonos",
+        "responses": {
+          "200": {
+            "description": "Lista de teléfonos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Telefono" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Teléfonos"],
+        "summary": "Crear un teléfono",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["user_id", "telefono"],
+                "properties": {
+                  "user_id": { "type": "integer", "example": 2 },
+                  "telefono": { "type": "string", "example": "3123456789" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Teléfono creado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Telefono" }
+              }
+            }
+          },
+          "400": { "description": "Error de validación" }
+        }
+      },
+      "put": {
+        "tags": ["Teléfonos"],
+        "summary": "Actualizar un teléfono",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["id", "telefono"],
+                "properties": {
+                  "id": { "type": "integer", "example": 6 },
+                  "telefono": { "type": "string", "example": "3209876543" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Teléfono actualizado" },
+          "400": { "description": "Error de validación" },
+          "404": { "description": "Teléfono no encontrado" }
+        }
+      }
+    },
+    "/telefonos/{id}": {
+      "delete": {
+        "tags": ["Teléfonos"],
+        "summary": "Eliminar un teléfono por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Teléfono eliminado" },
+          "400": { "description": "ID inválido" },
+          "404": { "description": "Teléfono no encontrado" }
+        }
+      }
+    },
+    "/telefonos/user/{user_id}": {
+      "get": {
+        "tags": ["Teléfonos"],
+        "summary": "Listar teléfonos de un usuario",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de teléfonos del usuario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Telefono" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
